@@ -25,7 +25,7 @@ public class Crawler {
         discoveredList = 0;
     }
 
-    public void crawl() throws IOException {
+    public void crawl() throws IOException, InterruptedException {
         Connection connection;
         Document doc;
         String url;
@@ -37,6 +37,7 @@ public class Crawler {
             url = pages.remove(0);
             if (!visited.contains(url)) {
                 connection = Jsoup.connect(url);
+                System.out.println(connection.response().statusCode());
                 doc = connection.get();
                 visited.add(url);
                 System.out.println(pages.size() + " " + visited.size() + " " + url);
@@ -44,7 +45,7 @@ public class Crawler {
                 Elements elements = doc.select("a[href]");
 
                 for (Element link : elements) {
-                    if (link.absUrl("href").startsWith(url))
+                    if (link.absUrl("href").startsWith(host))
                         pages.add(link.absUrl("href"));
                 }
 
